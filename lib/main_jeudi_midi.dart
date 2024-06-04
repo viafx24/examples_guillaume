@@ -3,7 +3,6 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  print(listeMedoc[0].name);
   runApp(
     Phoenix(
       child: const DropdownMenuExample(),
@@ -12,27 +11,56 @@ void main() {
 }
 
 class Medicament {
-  String? categorie;
-  var listAnimal = [];
+  String categorie;
   String name;
+  String location;
 
   String get nameMedoc {
     return name;
   }
 
-  Medicament(this.name, this.categorie, this.listAnimal);
+  Medicament(this.name, this.categorie, this.location);
 }
 
-Medicament augmentin = Medicament(
-    "augmentin", "antibio", ["Augmentin", "Melox", "Dexa"]);
-Medicament melox = Medicament("melox", "antiinflammatoire",
-    ["Herisson", "oiseaux", "fouine"]);
+class CasDeFigure {
+  String? name;
+  String? equation;
+  String? label;
+  String? medoc;
 
-final listeMedoc = [augmentin, melox];
+  String? get nameCasDeFigure {
+    return name;
+  }
+
+  CasDeFigure(this.name, this.medoc, this.equation, this.label);
+}
+
+  // Medicament augmentin = Medicament("augmentin", "antibio", "frigo");
+
+  // Medicament melox = Medicament("melox", "antiinflammatoire", "étagère");
+
+  String augmentin="Augmentin";
+  String melox="Melox";
+
+  CasDeFigure A =
+      CasDeFigure("Hérisson", "augmentin", "poids/1000", "Hérisson 50mg/kg");
+  CasDeFigure B =
+      CasDeFigure("Oiseau", "augmentin", "poids*5/1000/12", "Hérisson 50mg/kg");
+
+  CasDeFigure C =
+      CasDeFigure("musté", "melox", "poids/1000", "Hérisson 50mg/kg");
+  CasDeFigure D =
+      CasDeFigure("toto", "melox", "poids*5/1000/24", "Hérisson 50mg/kg");
+
+  Map<String, List<CasDeFigure>> myMap = {
+    augmentin: [A, B],
+    melox: [C, D]
+  };
 
 double? poids;
 double? volume;
 double width=300;
+bool myBool=false;
 
 class DropdownMenuExample extends StatefulWidget {
   const DropdownMenuExample({super.key});
@@ -89,19 +117,25 @@ class _DropdownMenuExampleState extends State<DropdownMenuExample> {
                   controller: colorController,
                   requestFocusOnTap: true,
                   width: width,
+                  //hintText: 'test',
                   label: Text("Choisir un médicament"),
                   onSelected: (newValue) {
                     setState(() {
+                     //myBool=true ? Phoenix.rebirth(context):
                       _selectedKey = newValue;
+                      _selectedKey_2 = 'test2';
+
+                      poids = null;
+                      volume = null;
                       print(_selectedKey);
                     });
                   },
 
                   dropdownMenuEntries:
-                      listeMedoc.map<DropdownMenuEntry>((value) {
+                      myMap.keys.map<DropdownMenuEntry>((value) {
                     return DropdownMenuEntry(
-                      value: value.name,
-                      label: value.name,
+                      value: value,
+                      label: value,
                       // enabled: test.label != 'Grey',
                       //style: MenuItemButton.styleFrom(
                       // foregroundColor: test.color,
@@ -119,6 +153,7 @@ class _DropdownMenuExampleState extends State<DropdownMenuExample> {
                         // afterward. On desktop platforms however, this defaults to true.
                         requestFocusOnTap: true,
                         width: width,
+                        //hintText: 'test2',
                         label: Text("Choisir un animal/dosage"),
                         onSelected: (newValue) {
                           setState(() {
@@ -128,10 +163,10 @@ class _DropdownMenuExampleState extends State<DropdownMenuExample> {
                         },
 
                         dropdownMenuEntries:
-                            melox.listAnimal.map<DropdownMenuEntry>((value) {
+                            myMap[_selectedKey]!.map<DropdownMenuEntry>((value) {
                           return DropdownMenuEntry(
-                            value: value,
-                            label: value,
+                            value: value.nameCasDeFigure,
+                            label: value.nameCasDeFigure!,
                             // enabled: test.label != 'Grey',
                             //style: MenuItemButton.styleFrom(
                             // foregroundColor: test.color,
